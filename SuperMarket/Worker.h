@@ -24,5 +24,6 @@ public:
     int getAge() const;
     MyString getPassword() const;
     virtual MyString getRole() const = 0;
+    virtual const char* getSpecialCode() const = 0;
     virtual void print() const = 0;
 };

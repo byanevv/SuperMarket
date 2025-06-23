@@ -22,6 +22,9 @@ public:
 
     int getTransactionCount() const;
     int getWarningCount() const;
+    int getWarningPoints() const;
     MyString getRole() const override;
     void print() const override;
+    const char* getSpecialCode() const override;
+
 };

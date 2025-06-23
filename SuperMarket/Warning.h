@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "MyString.h"
 
 enum class Severity {
@@ -12,14 +11,15 @@ enum class Severity {
 class Warning {
 private:
     MyString sender;
-    MyString description;
     Severity severity;
 
 public:
     Warning();
-    Warning(const MyString& sender, const MyString& description, Severity severity);
+    Warning(const MyString& sender, Severity severity);
+    Warning(const MyString& sender, int points);
 
     MyString getSender() const;
-    MyString getDescription() const;
     Severity getSeverity() const;
+
+    int getPoints() const;
 };

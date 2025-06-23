@@ -12,7 +12,7 @@ public:
     Manager(const MyString& firstName, const MyString& lastName,
         const MyString& phoneNumber, int age, const MyString& password);
 
-    const char* getSpecialCode() const;
+    const char* getSpecialCode() const override;
     MyString getRole() const override;
     void print() const override;
 };

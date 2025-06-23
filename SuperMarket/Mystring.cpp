@@ -1,6 +1,7 @@
 #include "MyString.h"
 #include <cstring>
 #include <algorithm>
+#include <string>
 #pragma warning (disable : 4996)
 
 
@@ -223,7 +224,7 @@ MyString::MyString(int value) {
     bool isNegative = value < 0;
     unsigned int temp = isNegative ? -value : value;
 
-    // Записване на цифрите в обратен ред
+   
     do {
         buffer[length++] = '0' + (temp % 10);
         temp /= 10;
@@ -231,7 +232,7 @@ MyString::MyString(int value) {
 
     if (isNegative) buffer[length++] = '-';
 
-    // Обратен ред
+
     for (int i = 0; i < length / 2; ++i) {
         char tmp = buffer[i];
         buffer[i] = buffer[length - i - 1];
@@ -240,7 +241,7 @@ MyString::MyString(int value) {
 
     buffer[length] = '\0';
 
-    // Инициализиране на MyString със създадения низ
+   
     _size = length;
     _allocatedDataSize = length + 1;
     _data = new char[_allocatedDataSize];

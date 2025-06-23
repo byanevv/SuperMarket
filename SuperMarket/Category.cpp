@@ -1,7 +1,7 @@
 #include "Category.h"
 
 Category::Category(const MyString& name, const MyString& description)
-    : name(name), description(description) {}
+    : id(nextId++), name(name), description(description) {}
 
 MyString Category::getName() const {
     return name;

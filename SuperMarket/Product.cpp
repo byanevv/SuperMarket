@@ -1,7 +1,7 @@
 #include "Product.h"
 
 Product::Product(const MyString& name, const Category& category, double price)
-    : name(name), category(category), price(price) {}
+    : id(nextId++),name(name), category(category), price(price) {}
 
 MyString Product::getName() const {
     return name;
@@ -25,4 +25,10 @@ void Product::setCategory(const Category& category) {
 
 void Product::setPrice(double price) {
     this->price = price;
+}
+
+int Product::getId() const { return id; }
+
+void Product::print() const {
+
 }

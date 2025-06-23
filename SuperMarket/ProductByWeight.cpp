@@ -12,5 +12,5 @@ void ProductsByWeight::setKilos(double kilos) {
 }
 
 void ProductsByWeight::print() const {
-    std::cout << name << " : " << price << "/kg : " << kilos << "\n";
+    std::cout << name << " : " << price << "/kg : " << kilos << ".\n";
 }

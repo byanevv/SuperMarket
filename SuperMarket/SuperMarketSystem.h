@@ -24,7 +24,7 @@ private:
 
     Vector<Category> categories;
     Vector<Product> products;
-    Vector<GiftCard*> giftCards;
+    Vector<GiftCard> giftCards;
     Vector<MyString> supermarketfeed;
     Vector<Transaction> transactions;
 
@@ -57,6 +57,23 @@ public:
     void addWaitingCashier(const Cashier& c);
     //void approveCashier(const MyString& id);
 
-    //
+    // Manager Functionalities
+    void listPendingCashiers() const;
+    bool approveCashier(int cashierId, const MyString& specialCode);
+    bool declineCashier(int cashierId, const MyString& specialCode);
+    void listWarnedCashiers(int minPoints) const;
+    bool warnCashier(int cashierId, int points);
+    bool promoteCashier(int cashierId, const MyString& specialCode);
+    bool fireCashier(int cashierId, const MyString& specialCode);
+
+    bool addCategory(const MyString& name, const MyString& description);
+    bool deleteCategory(int categoryId);
+
+    void addProductFromConsole(const MyString& productType);
+    bool deleteProduct(int productId);
+
+    //Load files information
+    //bool loadProductsFromFile(const MyString& filename);
+    //bool loadGiftCardsFromFile(const MyString& filename);
 
 };
