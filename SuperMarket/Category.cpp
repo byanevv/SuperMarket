@@ -1,0 +1,22 @@
+#include "Category.h"
+
+Category::Category(const MyString& name, const MyString& description)
+    : name(name), description(description) {}
+
+MyString Category::getName() const {
+    return name;
+}
+
+MyString Category::getDescription() const {
+    return description;
+}
+
+void Category::setName(const MyString& name) {
+    this->name = name;
+}
+
+void Category::setDescription(const MyString& description) {
+    this->description = description;
+}
+
+int Category::getId() const { return id; }
