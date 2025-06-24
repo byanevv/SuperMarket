@@ -2,22 +2,22 @@
 
 #include "Worker.h"
 #include "Warning.h"
+#include "Vector.hpp"
 
 class Cashier : public Worker {
 private:
     int transactionCount;
-    Warning* warnings;     
-    int warningCount;      
-    int warningCapacity;    
+    Vector<Warning> warnings;
 
     void resizeWarnings();  
 
 public:
+    Cashier() = default;
     Cashier(const MyString& firstName, const MyString& lastName,
         const MyString& phone, int age, const MyString& password);
     ~Cashier();
 
-    void addTransaction();
+    void addTransaction() override ;
     void addWarning(const Warning& newWarning);
 
     int getTransactionCount() const;
@@ -26,5 +26,6 @@ public:
     MyString getRole() const override;
     void print() const override;
     const char* getSpecialCode() const override;
+    
 
 };

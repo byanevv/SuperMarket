@@ -12,5 +12,19 @@ void ProductsByUnit::setQuantity(int quantity) {
 }
 
 void ProductsByUnit::print() const {
-    std::cout << name << " : " << price << " : " << quantity << "\n";
+    std::cout << "     " << getName() << " : " << getPrice() << " : " << quantity << "\n";
+}
+
+void ProductsByUnit::restock(int quantitytt) {
+    if (quantitytt > 0) {
+        quantity += quantitytt;
+    }
+    else {
+        if (quantity < quantitytt) {
+            std::cout << "Not enough left!";
+            
+        }
+        quantity -= quantitytt;
+
+    }
 }

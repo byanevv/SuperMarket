@@ -31,6 +31,8 @@ public:
     friend std::istream& operator>>(std::istream& is, MyString& ref);
     friend MyString operator+(const MyString& lhs, const MyString& rhs);
 
+    int toInt() const;
+
     MyString substr(size_t begin, size_t howMany) const;
 
 private:

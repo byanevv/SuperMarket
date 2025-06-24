@@ -13,6 +13,7 @@ protected:
     MyString password;
 
 public:
+    Worker() = default;
     Worker(const MyString& firstName, const MyString& lastName,
         const MyString& phone, int age, const MyString& password);
     virtual ~Worker() = default;
@@ -26,4 +27,7 @@ public:
     virtual MyString getRole() const = 0;
     virtual const char* getSpecialCode() const = 0;
     virtual void print() const = 0;
+
+    virtual void addTransaction() = 0;
+
 };

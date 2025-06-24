@@ -9,10 +9,10 @@ Warning::Warning(const MyString& sender ,Severity severity)
 Warning::Warning(const MyString& sender, int points)
     : sender(sender) {
 
-    if (points >= static_cast<int>(Severity::HIGH)) {
+    if (points == static_cast<int>(Severity::HIGH)) {
         severity = Severity::HIGH;
     }
-    else if (points >= static_cast<int>(Severity::MEDIUM)) {
+    else if (points == static_cast<int>(Severity::MEDIUM)) {
         severity = Severity::MEDIUM;
     }
     else {
@@ -24,5 +24,12 @@ MyString Warning::getSender() const { return sender; }
 Severity Warning::getSeverity() const { return severity; }
 
 int Warning::getPoints() const {
-    return static_cast<int>(severity);
+
+    if (severity == Severity::LOW) {
+        return 100;
+    }
+    else if (severity == Severity::MEDIUM) {
+        return 200;
+    }
+    else { return 300; }
 }

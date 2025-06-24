@@ -7,6 +7,8 @@ private:
     MyString category;
 
 public:
-    SingleCategoryGiftCard(const MyString& code, double discount, const MyString& category);
+    SingleCategoryGiftCard( double discount, const MyString& category);
     bool isApplicable(const MyString& category) const override;
+    MyString getName() const override;
+    void print() const override;
 };

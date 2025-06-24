@@ -11,4 +11,5 @@ public:
     int getQuantity() const;
     void setQuantity(int quantity);
     void print() const override;
+    void restock(int quantitytt) override;
 };

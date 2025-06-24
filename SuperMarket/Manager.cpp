@@ -2,7 +2,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
-#include "MyString.h"
+
+Manager::~Manager() {
+    
+}
 
 Manager::Manager(const MyString& firstName, const MyString& lastName,const MyString& phoneNumber, int age, const MyString& password)
     : Worker(firstName, lastName, phoneNumber, age, password) {
@@ -45,4 +48,8 @@ MyString Manager::getRole() const {
 
 void Manager::print() const {
     std::cout << firstName << " " << lastName << " with id " << id <<  " and phone number : " << phone << "\n";
+}
+
+void Manager::addTransaction() {
+
 }

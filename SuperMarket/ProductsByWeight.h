@@ -11,4 +11,5 @@ public:
     double getKilos() const;
     void setKilos(double kilos);
     void print() const override;
+    void restock(int quantitytt) override;
 };

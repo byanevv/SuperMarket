@@ -9,6 +9,7 @@ private:
     MyString receiptFileName;
 
 public:
+    Transaction() = default;
     Transaction(int cashierId, double totalSum, MyString receiptFilename);
 
     int getCashierId() const;

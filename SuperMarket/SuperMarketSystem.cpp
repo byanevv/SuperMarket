@@ -1,6 +1,7 @@
-#include "SuperMarketSystem.h"
+﻿#include "SuperMarketSystem.h"
 #include <iostream>
-#include <string> 
+#include <string>
+#include <fstream>
 
 
 SuperMarketSystem::~SuperMarketSystem() {
@@ -19,20 +20,7 @@ void SuperMarketSystem::addWaitingCashier(const Cashier& c) {
     waitingCashiers.pushBack(c);
 }
 
-//void SuperMarketSystem::approveCashier(const MyString& id) {
-//    for (size_t i = 0; i < waitingCashiers.size(); i++) {
-//        if (waitingCashiers[i].getId() == id) {
-//            addCashier(waitingCashiers[i]);
-//            waitingCashiers[i] = waitingCashiers[waitingCashiers.size() - 1];
-//            waitingCashiers.popBack();
-//            std::cout << "Cashier approved.\n";
-//            return;
-//        }
-//    }
-//    std::cout << "No such cashier in waiting list.\n";
-//}
-
-bool SuperMarketSystem::registerUser(const MyString& role, const MyString& firstName,
+void SuperMarketSystem::registerUser(const MyString& role, const MyString& firstName,
                                      const MyString& lastName, const MyString& phoneNumber,
                                      int age, const MyString& password) {
 
@@ -43,30 +31,31 @@ bool SuperMarketSystem::registerUser(const MyString& role, const MyString& first
         std::cout << "Code: "<< m.getId() <<"_special_code.txt\n";
         MyString feed = "A manager with id " + m.getId();
         supermarketfeed.pushBack(feed + " was added.");
-        return true;
+       
     } else if (role == "cashier") {
         Cashier c(firstName, lastName, phoneNumber, age, password);
         addWaitingCashier(c);
         std::cout << "Cashier registration pending approval from a manager.\n";
         MyString feed = "A cashier with id " + c.getId();
         supermarketfeed.pushBack(feed + " was added to the pending list.");
-        return true;
+      
     }
-
-    std::cout << "Invalid role!\n";
-    return false;
+    else {
+        std::cout << "Invalid role!\n";
+    }
+   
 }
 
 bool SuperMarketSystem::login(int id, const MyString& password) {
     if (loggedInUser != nullptr) {
         std::cout << "Worker with this " << loggedInUser->getId() << " is in the system !\n";
-        return;
+        return true;
     }
     else {
         for (size_t i = 0; i < managers.size(); i++) {
             if (managers[i].getId() == id && managers[i].getPassword() == password) {
                 loggedInUser = &managers[i];
-                std::cout << "User " << managers[i].getFirstName() << " " << managers[i].getLastName() << " with ID: "
+                std::cout << "User " << managers[i].getFirstName() << " " << managers[i].getLastName() << " with id "
                     << id << " has been logged into the system!\n";
                 return true;
             }
@@ -75,7 +64,7 @@ bool SuperMarketSystem::login(int id, const MyString& password) {
         for (size_t i = 0; i < cashiers.size(); i++) {
             if (cashiers[i].getId() == id && cashiers[i].getPassword() == password) {
                 loggedInUser = &cashiers[i];
-                std::cout << "User " << cashiers[i].getFirstName() << " " << cashiers[i].getLastName() << " with ID: "
+                std::cout << "User " << cashiers[i].getFirstName() << " " << cashiers[i].getLastName() << " with id "
                     << id << " has been logged into the system!\n";
                 return true;
             }
@@ -144,6 +133,7 @@ void SuperMarketSystem::listWorkers() const {
 }
 
 void SuperMarketSystem::listProducts() const {
+    std::cout << "Products :";
     for (size_t i = 0; i < products.size(); i++) {
         std::cout << (i + 1) << ". ";
         products[i].print();
@@ -162,10 +152,10 @@ void SuperMarketSystem::listProductsByCategory(int categoryId) const {
 }
 
 void SuperMarketSystem::listFeed() const {
-    std::cout << "All changes to the supermarketsystem : ";
+    std::cout << "All changes to the supermarketsystem : \n";
     for (size_t i = 0; i < supermarketfeed.size(); i++)
     {
-        std::cout << supermarketfeed[i];
+        std::cout << supermarketfeed[i]<<std::endl;
     }
 }
 
@@ -177,13 +167,146 @@ void SuperMarketSystem::listTransactions() const {
 }
 
 //sell function
+void SuperMarketSystem::sell() {
 
+    Vector<MyString> productssell;
+    Vector<double> quantity;
+    Vector<double> discounts;
+    int price = 0;
+    MyString id ;
+    double quantityofproduct = 0;
+    bool transaction = true;
+    MyString yesorno;
+    MyString vouchername;
+    bool rightvoucher = true;
+    while (transaction)
+    {
+        listProducts();
+        std::cout << std::endl << "Transaction ID: " << transactions.size() + 1 << std::endl << "Price : " << price << std::endl << std::endl;
+        std::cout << "Enter product ID to sell. Enter END to end the transaction." << std::endl << "> ";
+        std::cin >> id;
+        if (id != "END") {
+            std::cout << "Enter quantity:" << std::endl << "> ";
+            std::cin >> quantityofproduct;
+            std::cout << std::endl << "---------" << std::endl << std::endl;
+
+            for (size_t i = 0; i < products.size(); i++)
+            {
+                id.toInt();
+
+                if (products[i].getId() == id) {
+                    price += products[i].getPrice() * quantityofproduct;
+                    products[i].restock(-quantityofproduct);
+                    for (size_t j = 0; j < productssell.size(); j++)
+                    {
+                        if (productssell[j] == id) {
+                            quantity[j] += quantityofproduct;
+                        }
+                    }
+                    productssell.pushBack(id);
+                    quantity.pushBack(quantityofproduct);
+                    discounts.pushBack(0);
+                }
+                else {
+                    std::cout << "There is not a product with this id.\n";
+                }
+            }
+
+        }
+        else if (id == "END") {
+            transaction = false;
+        }
+    }
+      
+        std::cout << std::endl << "Ädd voucher: (Y/N)? ";
+        std::cin >> yesorno;
+            if(yesorno == "Y") {
+                while (rightvoucher) {
+                    std::cout << "Enter voucher:  ";
+                    std::cin >> vouchername;
+      
+                    for (size_t i = 0; i < giftCards.size(); i++)
+                    {
+                        if (giftCards[i].getCode() == vouchername) {
+                            rightvoucher = false;
+                            std::cout << std::endl;
+                            giftCards[i].print();
+                            for (size_t p = 0; p < productssell.size(); p++)
+                            {
+
+                                for (size_t j = 0; j < products.size(); j++)
+                                {
+                                    if (products[j].getId() == productssell[p] ) {
+
+                                        if (giftCards[i].isApplicable(products[j].getCategory().getName())) {
+                                            double discount = quantity[p] * products[j].getPrice()*giftCards[i].getDiscount();
+                                            price -= discount;
+                                            discounts[p] = giftCards[i].getDiscount();
+                                        }
+
+                                    }
+                                }
+                                
+                            }
+
+                        }
+                    }
+                    if (rightvoucher == true) {
+                        std::cout << "No voucher with this code. Try again.\n";
+                    }
+
+                }
+                
+            }
+            
+                MyString receiptname = "receipt_" + (transactions.size() + 1);
+                receiptname += ".txt";
+                std::cout << std::endl << "Receipt saved as: " << receiptname << std::endl;
+                std::cout << "Total: " << price << " lv." << std::endl << std::endl;
+                Transaction T(loggedInUser->getId(), price, receiptname);
+                loggedInUser->addTransaction();
+
+                std::ofstream outFile(receiptname.c_str());
+                if (outFile.is_open()) {
+                    
+                    outFile << "RECEIPT\n" << "TRANSACTION_ID: " << transactions.size() << "\n" << "CASHIER_ID" << loggedInUser->getId();
+                    outFile << "\n" << transactions[transactions.size() - 1].getDateTime() << "\n" << "-----------------------------\n\n";
+                    for (size_t i = 0; i < productssell.size(); i++)
+                    {
+                        for (size_t j = 0; j < products.size(); j++)
+                        {
+                            if (products[j].getId() == productssell[i]) {
+                                outFile << products[j].getName() << "\n" << quantity[i] << "*" << products[j].getPrice() << " - ";
+                                outFile << quantity[i] * (products[j].getPrice() - products[j].getPrice()*discounts[i]);
+                                outFile << "\n" << "###\n";
+                            }
+                        }
+                        outFile << "TOTAL: " << price;
+                    }
+
+                    outFile.close();
+                }
+}
+
+bool SuperMarketSystem::isaCashierloggedin()const {
+    if (loggedInUser->getRole() == "Cashier") {
+        return true;
+    }
+    return false;
+}
 //Manager part
+bool SuperMarketSystem::isaManagerloggedin()const {
+    if (loggedInUser->getRole() == "Manager") {
+        return true;
+    }
+    return false;
+}
+
 
 void SuperMarketSystem::listPendingCashiers() const {
     std::cout << "Waiting Cashiers:\n";
-    for (size_t i = 0; i < cashiers.size(); i++) {
-        cashiers[i].print();
+    for (size_t i = 0; i < waitingCashiers.size(); i++) {
+        waitingCashiers[i].print();
     }
 }
 
@@ -241,6 +364,7 @@ bool SuperMarketSystem::warnCashier(int cashierId, int points) {
     for (size_t i = 0; i < cashiers.size(); i++) {
         if (cashiers[i].getId() == cashierId) {
             Warning newwarning(loggedInUser->getId(),points);
+            std::cout << "A cashier with id " << cashierId << " was warned.\n";
             MyString feed = "A manager with id " + loggedInUser->getId();
             feed += " warned a cashier with id ";
             feed += cashierId;
@@ -399,7 +523,6 @@ void SuperMarketSystem::addProductFromConsole(const MyString& productType) {
     supermarketfeed.pushBack(feed + ".");
 }
 
-
 bool SuperMarketSystem::deleteProduct(int productId) {
     for (size_t i = 0; i < products.size(); ++i) {
         if (products[i].getId() == productId) {
@@ -415,4 +538,206 @@ bool SuperMarketSystem::deleteProduct(int productId) {
         }
     }
     return false;
+}
+
+bool SuperMarketSystem::loadProductsFromFile(const MyString& filename) {
+
+    std::ifstream file(filename.c_str());
+
+    if (!file.is_open()) {
+        std::cout << "Failed to open file: " << filename << '\n';
+        return false;
+    }
+
+    MyString line;
+    while (file >> line) {
+        MyString segment;
+        Vector<MyString> tokens;
+        MyString dvetochki = ":";
+        for (size_t i = 0; i < line.getSize(); i++)
+        {
+            if (line[i] != dvetochki)
+            {
+                segment += line[i];
+            }
+            else {
+                tokens.pushBack(segment);
+                segment = "";
+            }
+        }
+
+        if (tokens.empty()) continue;
+
+        if (tokens[0] == "NEW") {
+            if (tokens.size() < 6) {
+                std::cout << "Invalid NEW product format.\n";
+                continue;
+            }
+
+            MyString type = tokens[1];
+
+            if (type == "by_unit") {
+                // NEW:by_unit:<name>:<category>:<price>:<quantity>
+                MyString name = tokens[2];
+                MyString category = tokens[3];
+                double price = std::stod(tokens[4].c_str());
+                int quantity = std::stoi(tokens[5].c_str());
+                bool isthereacategory = false;
+                for (size_t i = 0; i < categories.size(); i++)
+                {
+                    if (categories[i].getName() == category) {
+                        Category categoryproduct = categories[i];
+                        ProductsByUnit p(name, categoryproduct, price, quantity);
+                        isthereacategory = true;
+                        products.pushBack(p);
+                    }
+                }
+                if (isthereacategory == false) {
+                    Category c(category, "random description");
+                    ProductsByUnit p(name, c, price, quantity);
+                    products.pushBack(p);
+                }
+                 
+                std::cout << "Added new product \"" << name << "\"\n";
+            }
+            else if (type == "by_weight") {
+                // NEW:by_weight:<name>:<category>:<price>:<weight>
+                MyString name = tokens[2];
+                MyString category = tokens[3];
+                double price = std::stod(tokens[4].c_str());
+                double weight = std::stod(tokens[5].c_str());
+                bool isthereacategory = false;
+
+                for (size_t i = 0; i < categories.size(); i++)
+                {
+                    if (categories[i].getName() == category) {
+                        Category categoryproduct = categories[i];
+                        ProductsByWeight p(name, categoryproduct, price, weight);
+                        isthereacategory = true;
+                        products.pushBack(p);
+                    }
+                }
+                if (isthereacategory == false) {
+                    Category c(category, "random description");
+                    ProductsByWeight p(name, c, price, weight);
+                    products.pushBack(p);
+                }
+                std::cout << "Added new product \"" << name << "\"\n";
+            }
+            else {
+                std::cout << "Unknown product type in NEW: " << type << "\n";
+            }
+        }
+        else {
+            // Формат: <product_type>:<id>:<quantity>
+            if (tokens.size() < 3) {
+                std::cout << "Invalid product restock format.\n";
+                continue;
+            }
+
+            int id = std::stoi(tokens[1].c_str());
+            int quantity = std::stoi(tokens[2].c_str());
+            bool foundtheproduct = false;
+
+            for (size_t i = 0; i < products.size(); i++)
+            {
+                if (products[i].getId() == id) {
+                    products[i].restock(quantity);
+                    foundtheproduct = true;
+                }
+            }
+            if (foundtheproduct == false) {
+                std::cout << "Product with ID " << id << " not found.\n";
+                continue;
+            }
+            std::cout << "Restocked product with ID " << id << " with " << quantity << " units.\n";
+        }
+    }
+
+    file.close();
+    return true;
+
+}
+
+bool SuperMarketSystem::loadGiftCardsFromFile(const MyString& filename) {
+
+    std::ifstream file(filename.c_str());
+
+    if (!file.is_open()) {
+        std::cout << "Failed to open file: " << filename << '\n';
+        return false;
+    }
+
+    MyString line;
+    while (file >> line) {
+        MyString segment;
+        Vector<MyString> tokens;
+        MyString dvetochki = ":";
+        for (size_t i = 0; i < line.getSize(); i++)
+        {
+            if (line[i] != dvetochki)
+            {
+                segment += line[i];
+            }
+            else {
+                tokens.pushBack(segment);
+                segment = "";
+            }
+        }
+
+        if (tokens.empty()) continue;
+
+        MyString typeofgiftcard = tokens[0];
+
+        if (typeofgiftcard == "SingleCategory") {
+            //type:category:percent
+            if (tokens.size() < 3) {
+                std::cout << "Invalid SingleGiftCard format.\n";
+                continue;
+            }
+            double discount = std::stod(tokens[2].c_str());
+            MyString category = tokens[1];
+            SingleCategoryGiftCard sc(discount,category);
+            giftCards.pushBack(sc);
+            std::cout << "Added new giftcard !\n";
+
+        }
+        else if (typeofgiftcard == "AllProductsCategory") {
+            if (tokens.size() < 2) {
+                std::cout << "Invalid AllProductsCategory format.\n";
+                    continue;
+            }
+            double discount = std::stod(tokens[2].c_str());
+            AllProductsGiftCard ap(discount);
+            giftCards.pushBack(ap);
+            std::cout << "Added new giftcard !\n";
+        }
+        else if (typeofgiftcard == "MultipleGiftCard") {
+            int count = std::stoi(tokens[1].c_str());
+
+            if (tokens.size() < 3+count) {
+                std::cout << "Invalid MultipleGiftCard format.\n";
+                continue;
+            }
+
+            double discount = std::stod(tokens[tokens.size()-1].c_str());
+            Vector<MyString> multiplecategories;
+            for (size_t i = 0; i < count; i++)
+            {
+                MyString currentcat = tokens[i + 2];
+                multiplecategories.pushBack(currentcat);
+            }
+            MultipleCategoryGiftCard mc(discount,multiplecategories);
+            giftCards.pushBack(mc);
+            std::cout << "Added new giftcard !\n";
+        }
+        else {
+            std::cout << "Wrong GiftCard Type.\n";
+        }
+      
+    }
+
+    file.close();
+    return true;
+
 }

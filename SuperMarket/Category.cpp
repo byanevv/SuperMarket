@@ -1,5 +1,7 @@
 #include "Category.h"
 
+int Category::nextId = 1;
+
 Category::Category(const MyString& name, const MyString& description)
     : id(nextId++), name(name), description(description) {}
 

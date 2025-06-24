@@ -3,33 +3,30 @@
 Cashier::Cashier(const MyString& firstName, const MyString& lastName,
     const MyString& phone, int age, const MyString& password)
     : Worker(firstName, lastName, phone, age, password),
-    transactionCount(0), warningCount(0), warningCapacity(5) {
-    warnings = new Warning[warningCapacity];
+    transactionCount(0) {
+    
 }
 
 Cashier::~Cashier() {
-    delete[] warnings;
+    
 }
 
 void Cashier::addTransaction() {
     transactionCount++;
-}
-
-void Cashier::resizeWarnings() {
-    warningCapacity *= 2;
-    Warning* newWarnings = new Warning[warningCapacity];
-    for (int i = 0; i < warningCount; ++i) {
-        newWarnings[i] = warnings[i];
+    if (transactionCount % 3 == 0) {
+        if (warnings.size()>=1) {
+            for (size_t i = 0; i < warnings.size()-1; i++)
+            {   
+                warnings[i] = warnings[i + 1];
+            }
+            warnings.popBack();
+        }
     }
-    delete[] warnings;
-    warnings = newWarnings;
 }
 
 void Cashier::addWarning(const Warning& newWarning) {
-    if (warningCount >= warningCapacity) {
-        resizeWarnings();
-    }
-    warnings[warningCount++] = newWarning;
+    
+    warnings.pushBack(newWarning);
 }
 
 int Cashier::getTransactionCount() const {
@@ -37,12 +34,12 @@ int Cashier::getTransactionCount() const {
 }
 
 int Cashier::getWarningCount() const {
-    return warningCount;
+    return warnings.size();
 }
 
 int Cashier::getWarningPoints() const {
     int sum = 0;
-    for (size_t i = 0; i < warningCount; i++)
+    for (size_t i = 0; i < warnings.size(); i++)
     {
         sum += warnings[i].getPoints();
     }

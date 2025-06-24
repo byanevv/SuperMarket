@@ -35,7 +35,7 @@ public:
     ~SuperMarketSystem();
 
     // Registration and Login
-    bool registerUser(const MyString& role, const MyString& firstName,
+    void registerUser(const MyString& role, const MyString& firstName,
         const MyString& lastName, const MyString& phoneNumber,
         int age, const MyString& password);
 
@@ -55,9 +55,13 @@ public:
     void addManager(const Manager& m);
     void addCashier(const Cashier& c);
     void addWaitingCashier(const Cashier& c);
-    //void approveCashier(const MyString& id);
+    
+    void sell();
+    bool isaCashierloggedin() const;
 
     // Manager Functionalities
+    bool isaManagerloggedin() const;
+
     void listPendingCashiers() const;
     bool approveCashier(int cashierId, const MyString& specialCode);
     bool declineCashier(int cashierId, const MyString& specialCode);
@@ -73,7 +77,7 @@ public:
     bool deleteProduct(int productId);
 
     //Load files information
-    //bool loadProductsFromFile(const MyString& filename);
-    //bool loadGiftCardsFromFile(const MyString& filename);
+    bool loadProductsFromFile(const MyString& filename);
+    bool loadGiftCardsFromFile(const MyString& filename);
 
 };

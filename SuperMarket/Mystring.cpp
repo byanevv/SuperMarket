@@ -250,3 +250,23 @@ MyString::MyString(int value) {
 
     
 }
+int MyString::toInt() const {
+    int result = 0;
+    int i = 0;
+    bool negative = false;
+
+    if (_data[0] == '-') {
+        negative = true;
+        i = 1;
+    }
+
+    for (; _data[i] != '\0'; ++i) {
+        if (_data[i] < '0' || _data[i] > '9') {
+            break; 
+        }
+
+        result = result * 10 + (_data[i] - '0');
+    }
+
+    return negative ? -result : result;
+}

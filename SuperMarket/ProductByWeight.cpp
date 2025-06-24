@@ -12,5 +12,19 @@ void ProductsByWeight::setKilos(double kilos) {
 }
 
 void ProductsByWeight::print() const {
-    std::cout << name << " : " << price << "/kg : " << kilos << ".\n";
+    std::cout << "     " << getName() << " : " << getPrice() << "/kg : " << kilos << ".\n";
+}
+
+void ProductsByWeight::restock(int quantitytt) {
+    if (quantitytt > 0) {
+        kilos += quantitytt;
+    }
+    else {
+        if (kilos < quantitytt) {
+            std::cout << "Not enough left!";
+
+        }
+        kilos -= quantitytt;
+
+    }
 }

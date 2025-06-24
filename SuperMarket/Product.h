@@ -4,7 +4,7 @@
 #include "Category.h"
 
 class Product {
-protected:
+private:
     MyString name;
     Category category;
     double price;
@@ -12,6 +12,7 @@ protected:
     int id;
 
 public:
+    Product() = default;
     Product(const MyString& name, const Category& category, double price);
     virtual ~Product() = default;
 
@@ -24,4 +25,5 @@ public:
     void setCategory(const Category& category);
     void setPrice(double price);
     virtual void print() const ;
+    virtual void restock(int quantity) ;
 };

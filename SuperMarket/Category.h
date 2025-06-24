@@ -10,6 +10,7 @@ private:
     int id;
 
 public:
+    Category() = default;
     Category(const MyString& name, const MyString& description);
     MyString getName() const;
     MyString getDescription() const;

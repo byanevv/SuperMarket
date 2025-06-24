@@ -2,6 +2,7 @@
 
 #include "MyString.h"
 
+
 enum class Severity {
     LOW = 100,
     MEDIUM = 200,
