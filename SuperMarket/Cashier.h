@@ -9,8 +9,6 @@ private:
     int transactionCount;
     Vector<Warning> warnings;
 
-    void resizeWarnings();  
-
 public:
     Cashier() = default;
     Cashier(const MyString& firstName, const MyString& lastName,

@@ -12,7 +12,7 @@ void ProductsByUnit::setQuantity(int quantity) {
 }
 
 void ProductsByUnit::print() const {
-    std::cout << "     " << getName() << " : " << getPrice() << " : " << quantity << "\n";
+    std::cout << getName() << " : " << getPrice() << " : " << quantity << "\n";
 }
 
 void ProductsByUnit::restock(int quantitytt) {

@@ -1,11 +1,13 @@
 ﻿#include "SuperMarketSystem.h"
 #include <iostream>
-#include <string>
 #include <fstream>
 
 
 SuperMarketSystem::~SuperMarketSystem() {
-    //tuka trqbva da se deletvat lainata i da se zapazva v fail
+    for (size_t i = 0; i < products.size(); i++) {
+        delete products[i];
+    }
+    products.clear();
 }
 
 void SuperMarketSystem::addManager(const Manager& m) {
@@ -29,14 +31,16 @@ void SuperMarketSystem::registerUser(const MyString& role, const MyString& first
         addManager(m);
         std::cout << "Manager registered successfully!\n" << "Special code: " << m.getSpecialCode() << "\n";
         std::cout << "Code: "<< m.getId() <<"_special_code.txt\n";
-        MyString feed = "A manager with id " + m.getId();
+        MyString mid = m.getId();
+        MyString feed = "A manager with id " + mid;
         supermarketfeed.pushBack(feed + " was added.");
        
     } else if (role == "cashier") {
         Cashier c(firstName, lastName, phoneNumber, age, password);
         addWaitingCashier(c);
         std::cout << "Cashier registration pending approval from a manager.\n";
-        MyString feed = "A cashier with id " + c.getId();
+        MyString cid = c.getId();
+        MyString feed = "A cashier with id " + cid;
         supermarketfeed.pushBack(feed + " was added to the pending list.");
       
     }
@@ -89,7 +93,8 @@ void SuperMarketSystem::leave() {
     if (loggedInUser->getRole() == "Manager") {
         for (size_t i = 0; i < managers.size(); i++) {
             if (managers[i].getId() == id) {
-                MyString feed = "A manager with id " + managers[i].getId();
+                MyString mid = managers[i].getId();
+                MyString feed = "A manager with id " + mid;
                 supermarketfeed.pushBack(feed + " left work.");
                 managers[i] = managers[managers.size() - 1];
                 managers.popBack();
@@ -100,7 +105,8 @@ void SuperMarketSystem::leave() {
     } else if (loggedInUser->getRole() == "Cashier") {
         for (size_t i = 0; i < cashiers.size(); i++) {
             if (cashiers[i].getId() == id) {
-                MyString feed = "A Cashier with id " + cashiers[i].getId();
+                MyString cid = cashiers[i].getId();
+                MyString feed = "A Cashier with id " + cid;
                 supermarketfeed.pushBack(feed + " left work.");
                 cashiers[i] = cashiers[cashiers.size() - 1];
                 cashiers.popBack();
@@ -133,20 +139,28 @@ void SuperMarketSystem::listWorkers() const {
 }
 
 void SuperMarketSystem::listProducts() const {
-    std::cout << "Products :";
+    std::cout << "Products :\n";
     for (size_t i = 0; i < products.size(); i++) {
-        std::cout << (i + 1) << ". ";
-        products[i].print();
+        std::cout << "     " << (i + 1) << ". ";
+        
+
+        products[i]->print();
     }
 }
 
 void SuperMarketSystem::listProductsByCategory(int categoryId) const {
-    int j = 0;
+    int j = 1;
     for (size_t i = 0; i < products.size(); i++) {
-        if (products[i].getCategory().getId() == categoryId) {
-            std::cout << "Products from category " << products[i].getCategory().getName();
-            std::cout << (j++) << ". "; // da go proverq dali raboti pravilno
-            products[i].print();
+        if (products[i]->getCategory().getId() == categoryId) {
+            std::cout << "Products from category " << products[i]->getCategory().getName() << " :\n";
+            break;
+        }
+    }
+    for (size_t i = 0; i < products.size(); i++) {
+        if (products[i]->getCategory().getId() == categoryId) {
+           
+            std::cout << "     " << (j++) << ". "; // da go proverq dali raboti pravilno
+            products[i]->print();
         }
     }
 }
@@ -166,6 +180,39 @@ void SuperMarketSystem::listTransactions() const {
     }
 }
 
+void SuperMarketSystem::editCategory(int id) {
+    bool iscategory = false;
+    for (size_t i = 0; i < categories.size(); i++)
+    {   
+        if (categories[i].getId() == id) {
+
+            std::cout << "Enter Category name: ";
+            char buffer[100];
+            std::cin.ignore();
+            std::cin.getline(buffer, 100);
+
+            MyString category(buffer);
+            categories[i].setName(category);
+
+            char desc[400];
+            std::cout << "Enter category description: ";
+            std::cin.ignore();
+            std::cin.getline(desc, 400);
+            MyString description(desc);
+            categories[i].setDescription(desc);
+            MyString lid = loggedInUser->getId();
+            MyString feed = "A category was edited from a worker with id " + lid;
+            supermarketfeed.pushBack(feed + " .");
+            iscategory = true;
+        }
+    }
+    
+    if (iscategory == false) {
+        std::cout << "Wrong Id!\n";
+    }
+
+
+}
 //sell function
 void SuperMarketSystem::sell() {
 
@@ -194,9 +241,9 @@ void SuperMarketSystem::sell() {
             {
                 id.toInt();
 
-                if (products[i].getId() == id) {
-                    price += products[i].getPrice() * quantityofproduct;
-                    products[i].restock(-quantityofproduct);
+                if (products[i]->getId() == id) {
+                    price += products[i]->getPrice() * quantityofproduct;
+                    products[i]->restock(-quantityofproduct);
                     for (size_t j = 0; j < productssell.size(); j++)
                     {
                         if (productssell[j] == id) {
@@ -236,10 +283,10 @@ void SuperMarketSystem::sell() {
 
                                 for (size_t j = 0; j < products.size(); j++)
                                 {
-                                    if (products[j].getId() == productssell[p] ) {
+                                    if (products[j]->getId() == productssell[p] ) {
 
-                                        if (giftCards[i].isApplicable(products[j].getCategory().getName())) {
-                                            double discount = quantity[p] * products[j].getPrice()*giftCards[i].getDiscount();
+                                        if (giftCards[i].isApplicable(products[j]->getCategory().getName())) {
+                                            double discount = quantity[p] * products[j]->getPrice()*giftCards[i].getDiscount();
                                             price -= discount;
                                             discounts[p] = giftCards[i].getDiscount();
                                         }
@@ -275,9 +322,9 @@ void SuperMarketSystem::sell() {
                     {
                         for (size_t j = 0; j < products.size(); j++)
                         {
-                            if (products[j].getId() == productssell[i]) {
-                                outFile << products[j].getName() << "\n" << quantity[i] << "*" << products[j].getPrice() << " - ";
-                                outFile << quantity[i] * (products[j].getPrice() - products[j].getPrice()*discounts[i]);
+                            if (products[j]->getId() == productssell[i]) {
+                                outFile << products[j]->getName() << "\n" << quantity[i] << "*" << products[j]->getPrice() << " - ";
+                                outFile << quantity[i] * (products[j]->getPrice() - products[j]->getPrice()*discounts[i]);
                                 outFile << "\n" << "###\n";
                             }
                         }
@@ -289,17 +336,27 @@ void SuperMarketSystem::sell() {
 }
 
 bool SuperMarketSystem::isaCashierloggedin()const {
-    if (loggedInUser->getRole() == "Cashier") {
+    if (loggedInUser == nullptr) {
+        return false;
+    }
+    else if (loggedInUser->getRole() == "Cashier") {
         return true;
     }
-    return false;
+    else if (loggedInUser->getRole() == "Manager") {
+        return false;
+    }
 }
 //Manager part
 bool SuperMarketSystem::isaManagerloggedin()const {
-    if (loggedInUser->getRole() == "Manager") {
+    if (loggedInUser == nullptr) {
+        return false;
+    }
+    else if (loggedInUser->getRole() == "Manager") {
         return true;
     }
-    return false;
+    else if(loggedInUser->getRole() == "Cashier"){
+        return false;
+    }
 }
 
 
@@ -319,7 +376,8 @@ bool SuperMarketSystem::approveCashier(int cashierId, const MyString& specialCod
                 waitingCashiers[i] = waitingCashiers[waitingCashiers.size() - 1];
                 waitingCashiers.popBack();
                 std::cout << "Cashier approved successfully!\n";
-                MyString feed = "A manager with id " + loggedInUser->getId();
+                MyString lid = loggedInUser->getId();
+                MyString feed = "A manager with id " + lid;
                 supermarketfeed.pushBack(feed + " approved a new cashier!");
                 return true;
             }
@@ -339,11 +397,14 @@ bool SuperMarketSystem::declineCashier(int cashierId, const MyString& specialCod
 
                 waitingCashiers[i] = waitingCashiers[waitingCashiers.size() - 1];
                 waitingCashiers.popBack();
-                MyString feed = "A manager with id " + loggedInUser->getId();
+                std::cout << "Manager declined cashier with id " << cashierId << " .\n";
+                MyString lid = loggedInUser->getId();
+                MyString feed = "A manager with id " + lid;
                 supermarketfeed.pushBack(feed + " declined a cashier!");
                 return true;
             }
         }
+        std::cout << "There is not a cashier with this id in the waiting list.\n";
     }
     else {
         std::cout << "Wrong code!\n";
@@ -364,10 +425,14 @@ bool SuperMarketSystem::warnCashier(int cashierId, int points) {
     for (size_t i = 0; i < cashiers.size(); i++) {
         if (cashiers[i].getId() == cashierId) {
             Warning newwarning(loggedInUser->getId(),points);
+            cashiers[i].addWarning(newwarning);
+
             std::cout << "A cashier with id " << cashierId << " was warned.\n";
-            MyString feed = "A manager with id " + loggedInUser->getId();
+            MyString lid = loggedInUser->getId();
+            MyString feed = "A manager with id " + lid;
             feed += " warned a cashier with id ";
-            feed += cashierId;
+            MyString cid = cashierId;
+            feed += cid;
             supermarketfeed.pushBack(feed + ".");
         }
     }
@@ -378,7 +443,7 @@ bool SuperMarketSystem::promoteCashier(int cashierId, const MyString& specialCod
     if (loggedInUser->getSpecialCode() == specialCode) {
         for (size_t i = 0; i < cashiers.size(); i++) {
             if (cashiers[i].getId() == cashierId) {
-                Manager m(cashiers[i].getFirstName(), cashiers[i].getLastName(),
+                Manager m(cashiers[i].getId(),cashiers[i].getFirstName(), cashiers[i].getLastName(),
                     cashiers[i].getPhone(), cashiers[i].getAge(), cashiers[i].getPassword());
 
                 managers.pushBack(m);
@@ -387,9 +452,11 @@ bool SuperMarketSystem::promoteCashier(int cashierId, const MyString& specialCod
                 std::cout << "A cashier was promoted to manager successfully!\n" << "Special code: " << m.getSpecialCode() << "\n";
                 std::cout << "Code: " << m.getId() << "_special_code.txt\n";
 
-                MyString feed = "A manager with id " + loggedInUser->getId();
+                MyString lid = loggedInUser->getId();
+                MyString feed = "A manager with id " + lid;
                 feed += " promoted a cashier with id ";
-                feed += cashierId;
+                MyString cid = cashierId;
+                feed += cid;
                 supermarketfeed.pushBack(feed + ".");
 
                 return true;
@@ -405,41 +472,54 @@ bool SuperMarketSystem::fireCashier(int cashierId, const MyString& specialCode) 
             if (cashiers[i].getId() == cashierId) {
                 cashiers[i] = cashiers[cashiers.size() - 1];
                 cashiers.popBack();
-                MyString feed = "A manager with id " + loggedInUser->getId();
+                std::cout << "A manager with id " << loggedInUser->getId() << " fired a cashier with id " << cashierId << " .\n";
+
+                MyString lid = loggedInUser->getId();
+                MyString feed = "A manager with id " + lid;
                 feed += " fired a cashier with id ";
-                feed += cashierId;
+                MyString cid = cashierId;
+                feed += cid;
                 supermarketfeed.pushBack(feed + ".");
                 return true;
             }
         }
+        std::cout << "No cashier with that id , if you tried to fire a manager you can not.\n";
     }
     return false;
 }
 
 bool SuperMarketSystem::addCategory(const MyString& name, const MyString& description) {
-    for (size_t i = 0; i < categories.size(); i++) {
-        if (categories[i].getName() == name) { 
-            std::cout << "There is already a category with this name.";
-            return false; }
-        MyString feed = "A manager with id " + loggedInUser->getId();
-        feed += " tried to add a new category ";
-        feed += name;
-        supermarketfeed.pushBack(feed + " but there was already one like that.");
 
+    for (size_t i = 0; i < categories.size(); i++) {
+        if (categories[i].getName() == name) {
+            std::cout << "There is already a category with this name.";
+            
+
+            MyString lid = loggedInUser->getId();
+            MyString feed = "A manager with id " + lid;
+            feed += " tried to add a new category ";
+            feed += name.c_str();
+            supermarketfeed.pushBack(feed + " but there was already one like that.");
+            return false;
+        }
     }
+
     categories.pushBack(Category(name, description));
-    MyString feed = "A manager with id " + loggedInUser->getId();
+    MyString lid = loggedInUser->getId();
+    std::cout << "Manager with id " << lid << " added new category " << name << " .\n";
+    MyString feed = "A manager with id " + lid;
     feed += " added a new category ";
-    feed += name;
+    feed += name.c_str();
     supermarketfeed.pushBack(feed + ".");
     return true;
 }
 
 bool SuperMarketSystem::deleteCategory(int categoryId) {
     for (size_t i = 0; i < products.size(); i++) {
-        if (products[i].getCategory().getId() == categoryId) {
+        if (products[i]->getCategory().getId() == categoryId) {
             std::cout << "You first have to delete all the products from this category to be able to delete it.\n";
-            MyString feed = "A manager with id " + loggedInUser->getId();
+            MyString lid = loggedInUser->getId();
+            MyString feed = "A manager with id " + lid;
             feed += " tried to delete category ";
             feed += categories[categoryId].getName();
             supermarketfeed.pushBack(feed + " but there were products from this category.");
@@ -450,11 +530,13 @@ bool SuperMarketSystem::deleteCategory(int categoryId) {
     for (size_t i = 0; i < categories.size(); ++i) {
         if (categories[i].getId() == categoryId) {
 
-            MyString feed = "A manager with id " + loggedInUser->getId();
+            MyString lid = loggedInUser->getId();
+            MyString feed = "A manager with id " + lid;
             feed += " deleted category ";
-            feed += categories[i].getName();
+            MyString cname = categories[i].getName();
+            feed += cname;
             supermarketfeed.pushBack(feed + ".");
-
+            std::cout << "A manager with id " << lid << " deleted a category " << cname << " .\n";
             categories[i] = categories[categories.size() - 1];
             categories.popBack();
             return true;
@@ -464,17 +546,22 @@ bool SuperMarketSystem::deleteCategory(int categoryId) {
 }
 
 void SuperMarketSystem::addProductFromConsole(const MyString& productType) {
-    MyString name, categoryName;
     double price;
     double quantity;
 
+    char buffer[100];
+
     std::cout << "Enter product name: ";
     std::cin.ignore();
-    std::cin >> name;
-    //problem with taking the name in 2 parts
+    std::cin.getline(buffer, 100);
+
+    MyString name =buffer;
+    
 
     std::cout << "Enter product category: ";
-    std::cin >> categoryName;
+    std::cin.getline(buffer, 100);
+    MyString categoryName = buffer;
+
 
     int categoryId = -1;
     for (size_t i = 0; i < categories.size(); i++){
@@ -496,7 +583,7 @@ void SuperMarketSystem::addProductFromConsole(const MyString& productType) {
         std::cout << "Enter quantity (kg): ";
         std::cin >> quantity;
 
-        ProductsByWeight p(name, categories[categoryId], price, quantity);
+        Product* p = new ProductsByWeight(name, categories[categoryId], price, quantity);
         products.pushBack(p);
 
     }
@@ -507,7 +594,7 @@ void SuperMarketSystem::addProductFromConsole(const MyString& productType) {
         std::cout << "Enter quantity (units): ";
         std::cin >> quantity;
 
-        ProductsByUnit p(name, categories[categoryId], price, static_cast<int>(quantity));
+        Product* p = new ProductsByUnit(name, categories[categoryId], price, static_cast<int>(quantity));
         products.pushBack(p);
 
     }
@@ -516,21 +603,23 @@ void SuperMarketSystem::addProductFromConsole(const MyString& productType) {
         return;
     }
 
-    std::cout << "Product \"" << name << "\" added successfully under category \"" << categoryName << "\"\n";
-    MyString feed = "A manager with id " + loggedInUser->getId();
+    std::cout << "Product \"" << name << "\" added successfully under category \"" << categoryName << "\"\n";\
+        MyString lid = loggedInUser->getId();
+    MyString feed = "A manager with id " + lid;
     feed += " added a new product ";
-    feed += name;
+    feed += name.c_str();
     supermarketfeed.pushBack(feed + ".");
 }
 
 bool SuperMarketSystem::deleteProduct(int productId) {
     for (size_t i = 0; i < products.size(); ++i) {
-        if (products[i].getId() == productId) {
+        if (products[i]->getId() == productId) {
 
-            MyString feed = "A manager with id " + loggedInUser->getId();
+            MyString lid = loggedInUser->getId();
+            MyString feed = "A manager with id " + lid;
             feed += " deleted a product ";
-            feed += products[i].getName();
-            supermarketfeed.pushBack(feed + " but there was already one like that.");
+            feed += products[i]->getName();
+            supermarketfeed.pushBack(feed + " .");
 
             products[i] = products[products.size() - 1];
             products.popBack();
@@ -580,21 +669,21 @@ bool SuperMarketSystem::loadProductsFromFile(const MyString& filename) {
                 // NEW:by_unit:<name>:<category>:<price>:<quantity>
                 MyString name = tokens[2];
                 MyString category = tokens[3];
-                double price = std::stod(tokens[4].c_str());
-                int quantity = std::stoi(tokens[5].c_str());
+                double price = tokens[4].toDouble();
+                int quantity = tokens[5].toInt();
                 bool isthereacategory = false;
                 for (size_t i = 0; i < categories.size(); i++)
                 {
                     if (categories[i].getName() == category) {
                         Category categoryproduct = categories[i];
-                        ProductsByUnit p(name, categoryproduct, price, quantity);
+                        Product* p = new ProductsByUnit(name, categoryproduct, price, quantity);
                         isthereacategory = true;
                         products.pushBack(p);
                     }
                 }
                 if (isthereacategory == false) {
                     Category c(category, "random description");
-                    ProductsByUnit p(name, c, price, quantity);
+                    Product* p = new ProductsByUnit(name, c, price, quantity);
                     products.pushBack(p);
                 }
                  
@@ -604,22 +693,22 @@ bool SuperMarketSystem::loadProductsFromFile(const MyString& filename) {
                 // NEW:by_weight:<name>:<category>:<price>:<weight>
                 MyString name = tokens[2];
                 MyString category = tokens[3];
-                double price = std::stod(tokens[4].c_str());
-                double weight = std::stod(tokens[5].c_str());
+                double price = tokens[4].toDouble();
+                double weight = tokens[5].toInt();
                 bool isthereacategory = false;
 
                 for (size_t i = 0; i < categories.size(); i++)
                 {
                     if (categories[i].getName() == category) {
                         Category categoryproduct = categories[i];
-                        ProductsByWeight p(name, categoryproduct, price, weight);
+                        Product* p = new ProductsByWeight(name, categoryproduct, price, weight);
                         isthereacategory = true;
                         products.pushBack(p);
                     }
                 }
                 if (isthereacategory == false) {
                     Category c(category, "random description");
-                    ProductsByWeight p(name, c, price, weight);
+                    Product* p = new ProductsByWeight(name, c, price, weight);
                     products.pushBack(p);
                 }
                 std::cout << "Added new product \"" << name << "\"\n";
@@ -635,14 +724,14 @@ bool SuperMarketSystem::loadProductsFromFile(const MyString& filename) {
                 continue;
             }
 
-            int id = std::stoi(tokens[1].c_str());
-            int quantity = std::stoi(tokens[2].c_str());
+            int id = tokens[1].toInt();
+            int quantity = tokens[2].toInt();
             bool foundtheproduct = false;
 
             for (size_t i = 0; i < products.size(); i++)
             {
-                if (products[i].getId() == id) {
-                    products[i].restock(quantity);
+                if (products[i]->getId() == id) {
+                    products[i]->restock(quantity);
                     foundtheproduct = true;
                 }
             }
@@ -653,6 +742,11 @@ bool SuperMarketSystem::loadProductsFromFile(const MyString& filename) {
             std::cout << "Restocked product with ID " << id << " with " << quantity << " units.\n";
         }
     }
+
+   
+    MyString feed = "A restock happened and added more products ";
+
+    supermarketfeed.pushBack(feed);
 
     file.close();
     return true;
@@ -695,7 +789,7 @@ bool SuperMarketSystem::loadGiftCardsFromFile(const MyString& filename) {
                 std::cout << "Invalid SingleGiftCard format.\n";
                 continue;
             }
-            double discount = std::stod(tokens[2].c_str());
+            double discount = tokens[2].toDouble();
             MyString category = tokens[1];
             SingleCategoryGiftCard sc(discount,category);
             giftCards.pushBack(sc);
@@ -707,20 +801,20 @@ bool SuperMarketSystem::loadGiftCardsFromFile(const MyString& filename) {
                 std::cout << "Invalid AllProductsCategory format.\n";
                     continue;
             }
-            double discount = std::stod(tokens[2].c_str());
+            double discount = tokens[2].toDouble();
             AllProductsGiftCard ap(discount);
             giftCards.pushBack(ap);
             std::cout << "Added new giftcard !\n";
         }
         else if (typeofgiftcard == "MultipleGiftCard") {
-            int count = std::stoi(tokens[1].c_str());
+            int count = tokens[1].toInt();
 
             if (tokens.size() < 3+count) {
                 std::cout << "Invalid MultipleGiftCard format.\n";
                 continue;
             }
 
-            double discount = std::stod(tokens[tokens.size()-1].c_str());
+            double discount = tokens[tokens.size()-1].toDouble();
             Vector<MyString> multiplecategories;
             for (size_t i = 0; i < count; i++)
             {
@@ -736,6 +830,10 @@ bool SuperMarketSystem::loadGiftCardsFromFile(const MyString& filename) {
         }
       
     }
+
+    MyString feed = "A restock happened and added more giftcards ";
+
+    supermarketfeed.pushBack(feed);
 
     file.close();
     return true;

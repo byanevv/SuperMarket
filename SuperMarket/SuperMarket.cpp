@@ -53,7 +53,7 @@ int main()
         else if (command == "list-products") {
             supermarket.listProducts();
         }
-        else if (command == "list-products") {
+        else if (command == "list-products-bycategory") {
             MyString category;
             std::cin >> category;
             category = removethings(category);
@@ -73,6 +73,14 @@ int main()
         }
         else if (command == "logout") {
             supermarket.logout();
+        }
+        else if (command == "edit-category") {
+            MyString id;
+            std::cin >> id;
+            id = removethings(id);
+            int newid = id.toInt();
+            
+            supermarket.editCategory(newid);
         }
         else if(command == "sell")
         {

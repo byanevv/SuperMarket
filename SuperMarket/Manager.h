@@ -13,6 +13,8 @@ public:
     Manager() = default;
     Manager(const MyString& firstName, const MyString& lastName,
         const MyString& phoneNumber, int age, const MyString& password);
+    Manager(int id,const MyString& firstName, const MyString& lastName,
+        const MyString& phoneNumber, int age, const MyString& password);
     ~Manager();
 
     const char* getSpecialCode() const override;

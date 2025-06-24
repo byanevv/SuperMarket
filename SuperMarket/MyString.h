@@ -32,6 +32,7 @@ public:
     friend MyString operator+(const MyString& lhs, const MyString& rhs);
 
     int toInt() const;
+    double toDouble() const;
 
     MyString substr(size_t begin, size_t howMany) const;
 

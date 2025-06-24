@@ -23,7 +23,7 @@ private:
     Vector<Cashier> waitingCashiers;
 
     Vector<Category> categories;
-    Vector<Product> products;
+    Vector<Product*> products;
     Vector<GiftCard> giftCards;
     Vector<MyString> supermarketfeed;
     Vector<Transaction> transactions;
@@ -55,6 +55,7 @@ public:
     void addManager(const Manager& m);
     void addCashier(const Cashier& c);
     void addWaitingCashier(const Cashier& c);
+    void editCategory(int id);
     
     void sell();
     bool isaCashierloggedin() const;

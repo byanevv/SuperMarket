@@ -14,6 +14,14 @@ Manager::Manager(const MyString& firstName, const MyString& lastName,const MyStr
     saveCodeToFile();
 }
 
+Manager::Manager(int id,const MyString& firstName, const MyString& lastName, const MyString& phoneNumber, int age, const MyString& password)
+    : Worker(firstName, lastName, phoneNumber, age, password) {
+    std::srand(std::time(nullptr));
+    generateSpecialCode();
+    saveCodeToFile();
+    this->id = id;
+}
+
 void Manager::generateSpecialCode() {
     specialCode[0] = '0' + rand() % 10;
     specialCode[1] = 'A' + rand() % 26;

@@ -270,3 +270,35 @@ int MyString::toInt() const {
 
     return negative ? -result : result;
 }
+
+double MyString::toDouble() const {
+    double result = 0.0;
+    int i = 0;
+    bool negative = false;
+
+    if (_data[0] == '-') {
+        negative = true;
+        i = 1;
+    }
+
+    // Öÿëà ÷àñò
+    for (; _data[i] >= '0' && _data[i] <= '9'; ++i) {
+        result = result * 10 + (_data[i] - '0');
+    }
+
+    // Äğîáíà ÷àñò
+    if (_data[i] == '.' || _data[i] == ',') {
+        ++i;
+        double fraction = 0.0;
+        double divider = 10.0;
+
+        for (; _data[i] >= '0' && _data[i] <= '9'; ++i) {
+            fraction += (_data[i] - '0') / divider;
+            divider *= 10.0;
+        }
+
+        result += fraction;
+    }
+
+    return negative ? -result : result;
+}

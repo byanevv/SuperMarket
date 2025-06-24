@@ -19,11 +19,11 @@ public:
     MyString getName() const;
     Category getCategory() const;
     double getPrice() const;
-    int getId() const;
+    int getId() const ;
 
     void setName(const MyString& name);
     void setCategory(const Category& category);
     void setPrice(double price);
-    virtual void print() const ;
+    virtual void print() const  = 0;
     virtual void restock(int quantity) ;
 };
