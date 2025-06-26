@@ -8,8 +8,9 @@ private:
 
 public:
     ProductsByWeight(const MyString& name, const Category& category, double price, double kilos);
-    double getKilos() const;
+    double getwhatsleft() const override;
     void setKilos(double kilos);
     void print() const override;
-    void restock(int quantitytt) override;
+    MyString getType() const override;
+    bool restock(int quantitytt) override;
 };

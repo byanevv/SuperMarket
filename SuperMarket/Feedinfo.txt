@@ -1,0 +1,5 @@
+A manager with id 1 was added.
+A cashier with id 2 was added to the pending list.
+A restock happened and added more giftcards 
+A restock happened and added more products 
+A manager with id 1 approved a new cashier!

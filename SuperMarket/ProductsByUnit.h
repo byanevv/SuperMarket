@@ -8,8 +8,9 @@ private:
 
 public:
     ProductsByUnit(const MyString& name, const Category& category, double price, int quantity);
-    int getQuantity() const;
+    double getwhatsleft() const override;
     void setQuantity(int quantity);
     void print() const override;
-    void restock(int quantitytt) override;
+    MyString getType() const override;
+    bool restock(int quantitytt) override;
 };

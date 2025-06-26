@@ -59,3 +59,13 @@ const char* Cashier::getSpecialCode() const {
     std::cout << "Cashiers dont have special code.";
     return "nocode";
 }
+
+MyString Cashier::printwarnings() const {
+    MyString warningss = "";
+    for (size_t i = 0; i < warnings.size(); i++)
+    {
+        warningss = warningss + warnings[i].getSeverity();
+        warningss = warningss + ":";
+    }
+    return warningss;
+}

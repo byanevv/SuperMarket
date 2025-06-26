@@ -1,0 +1,4 @@
+NEW:by_unit:Qbulka:Fruits:10:100
+NEW:by_weight:Ananas:Fruits:5:50
+NEW:by_unit:Kiselo mlqko:Milk:2:200
+by_unit:3:100

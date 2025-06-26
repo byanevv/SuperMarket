@@ -10,7 +10,14 @@ bool AllProductsGiftCard::isApplicable(const MyString&) const {
 MyString AllProductsGiftCard::getName() const {
     return "AllProductsGiftCard";
 }
+const char* AllProductsGiftCard::getCode() const {
+    return getcode();
+}
 
 void AllProductsGiftCard::print() const {
-    std::cout << discount * 100 << "% applied to all products. Transaction completed!" << "\n";
+    std::cout << getDiscount() * 100 << "% applied to all products. Transaction completed!" << "\n";
+}
+
+MyString AllProductsGiftCard::printcategories() const {
+    return  "All";
 }

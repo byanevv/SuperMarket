@@ -24,7 +24,7 @@ private:
 
     Vector<Category> categories;
     Vector<Product*> products;
-    Vector<GiftCard> giftCards;
+    Vector<GiftCard*> giftCards;
     Vector<MyString> supermarketfeed;
     Vector<Transaction> transactions;
 

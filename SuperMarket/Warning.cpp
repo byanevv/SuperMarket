@@ -21,7 +21,17 @@ Warning::Warning(const MyString& sender, int points)
 }
 
 MyString Warning::getSender() const { return sender; }
-Severity Warning::getSeverity() const { return severity; }
+MyString Warning::getSeverity() const { 
+    
+    if (severity == Severity::LOW) {
+        return "LOW";
+    }
+    else if (severity == Severity::MEDIUM) {
+        return "MEDIUM";
+    }
+    else { return "HIGH"; }
+
+}
 
 int Warning::getPoints() const {
 

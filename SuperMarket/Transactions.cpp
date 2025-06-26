@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 
-Transaction::Transaction(int cashierId, double totalSum, MyString receiptFilename)
+Transaction::Transaction(int cashierId, double totalSum,const MyString& receiptFilename)
     : cashierId(cashierId), totalSum(totalSum),receiptFileName(receiptFileName)
 {
    // chasta s vremeto nz kak da stane ama tova ostava za posle
@@ -31,7 +31,7 @@ const MyString& Transaction::getReceiptFileName() const {
 void Transaction::print(int transid) const {
     std::cout << "Transaction number "<< transid <<" :\n";
     std::cout << "  Cashier ID: " << cashierId << "\n";
-    std::cout << "  Sum: " << totalSum << " ыт.\n";
+    std::cout << "  Sum: " << totalSum << " lv.\n";
     std::cout << "  Time: " << dateTime << "\n";
-    std::cout << "  file: " << receiptFileName << "\n";
+    std::cout << "  file: receipt_" << transid << ".txt" << "\n";
 }

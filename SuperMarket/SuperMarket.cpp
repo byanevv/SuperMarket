@@ -4,6 +4,8 @@
 #include "SuperMarketSystem.h"
 #include "MyString.h"
 #include "Vector.hpp"
+#include <cstdlib>
+#include <ctime>
 
 MyString removethings(MyString word) {
     MyString newword = word.substr(1,word.getSize()-2);
@@ -13,10 +15,14 @@ MyString removethings(MyString word) {
 
 int main()
 {
+    std::srand(std::time(nullptr));
     SuperMarketSystem supermarket;
 
 	std::cout << "Welcome to FMI Supermarket Management System 2024-2025!" << std::endl;
 	std::cout << "Please choose an action: \n\n" ;
+    supermarket.registerUser("manager","Borislav","Yanev","0955959454",20,"skib");
+    supermarket.registerUser("cashier", "sasho", "toaletna", "5454545", 10, "debel");
+
 	MyString command;
 	while (true) {
 		std::cout << "> ";
@@ -84,6 +90,8 @@ int main()
         }
         else if(command == "sell")
         {
+            std::cout << std::endl;
+
             if (supermarket.isaCashierloggedin()) {
                 supermarket.sell();
             }

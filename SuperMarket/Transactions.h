@@ -10,7 +10,7 @@ private:
 
 public:
     Transaction() = default;
-    Transaction(int cashierId, double totalSum, MyString receiptFilename);
+    Transaction(int cashierId, double totalSum,const MyString& receiptFilename);
 
     int getCashierId() const;
     double getTotalSum() const;

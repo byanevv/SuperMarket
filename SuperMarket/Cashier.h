@@ -23,6 +23,7 @@ public:
     int getWarningPoints() const;
     MyString getRole() const override;
     void print() const override;
+    MyString printwarnings() const;
     const char* getSpecialCode() const override;
     
 

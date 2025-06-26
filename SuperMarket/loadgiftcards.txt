@@ -1,0 +1,3 @@
+AllProductsCategory:15%
+MultipleGiftCard:2:Fruits:Milk:20%
+SingleCategory:Fruits:10%

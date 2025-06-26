@@ -16,7 +16,25 @@ bool MultipleCategoryGiftCard::isApplicable(const MyString& inputCategory) const
 MyString MultipleCategoryGiftCard::getName() const {
     return "MultipleCategoryGiftCard";
 }
+const char* MultipleCategoryGiftCard::getCode() const {
+    return getcode();
+}
 
 void MultipleCategoryGiftCard::print() const {
-    std::cout << discount * 100 << "% applied to products of multiple categories. Transaction completed!" << "\n";
+    std::cout << getDiscount() * 100 << "% applied to products of multiple categories. Transaction completed!" << "\n";
+}
+
+MyString MultipleCategoryGiftCard::printcategories() const {
+    MyString returnline = "";
+
+    returnline += categories.size();
+    returnline += ":";
+
+    for (size_t i = 0; i < categories.size(); i++)
+    {
+        returnline += categories[i];
+        returnline += ":";
+    }
+
+    return returnline;
 }

@@ -20,7 +20,7 @@ public:
     Warning(const MyString& sender, int points);
 
     MyString getSender() const;
-    Severity getSeverity() const;
+    MyString getSeverity() const;
 
     int getPoints() const;
 };

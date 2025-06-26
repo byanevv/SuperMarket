@@ -25,5 +25,7 @@ public:
     void setCategory(const Category& category);
     void setPrice(double price);
     virtual void print() const  = 0;
-    virtual void restock(int quantity) ;
+    virtual double getwhatsleft() const = 0;
+    virtual MyString getType() const = 0;
+    virtual bool restock(int quantity) ;
 };

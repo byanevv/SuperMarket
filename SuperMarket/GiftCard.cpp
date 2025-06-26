@@ -1,30 +1,31 @@
 #include "GiftCard.h"
-#include <stdexcept>
 #include <cstdlib>
 #include <ctime>
 
-int GiftCard::counter = 0;
+int GiftCard::counter = 1;
 
-GiftCard::GiftCard(double discount)
-    : discount(discount)
-{
-    counter++;
-    std::srand(std::time(nullptr));
-    void generatecode();
+GiftCard::GiftCard(double discount) : discount(discount),count(counter++){
+    
+    
+
+    generateCode();
+
 }
 
 void GiftCard::generateCode() {
-    code += '0' + rand() % 10;
-    code += 'A' + rand() % 26;
-    code +=counter;
-    code += 'A' + rand() % 26;
-    code += '0' + rand() % 10;
+    code[0] = '0' + rand() % 10;
+    code[1] = 'A' + rand() % 26;
+    code[2] = count + '0';
+    code[3] = 'A' + rand() % 26;
+    code[4] = '0' + rand() % 10;
+    code[5] = '\0';
   
 }
 
-MyString GiftCard::getCode() const {
+const char* GiftCard::getcode() const {
     return code;
 }
+
 
 double GiftCard::getDiscount() const {
     return discount;
@@ -35,9 +36,6 @@ double GiftCard::getDiscount() const {
 //    return std::regex_match(code.c_str(), pattern);
 //}
 
-void GiftCard::print() const {
-
-}
 
 MyString GiftCard::getName() const { return "skibid"; }
 

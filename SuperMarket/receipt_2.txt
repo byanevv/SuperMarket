@@ -1,0 +1,12 @@
+RECEIPT
+TRANSACTION_ID: 2
+CASHIER_ID: 2
+
+-----------------------------
+
+Kiselo mlqko 
+30 * 2 - 60
+
+###
+
+TOTAL: 60

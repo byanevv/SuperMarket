@@ -9,7 +9,9 @@ private:
 
 public:
     MultipleCategoryGiftCard( double discount, Vector<MyString> newcategories);
+    const char* getCode() const override;
     bool isApplicable(const MyString& category) const override;
     MyString getName() const override;
     void print() const override;
+    MyString printcategories() const override;
 };

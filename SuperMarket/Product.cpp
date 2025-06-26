@@ -32,6 +32,6 @@ void Product::setPrice(double price) {
 int Product::getId() const { return id; }
 
 
-void Product::restock(int quantity) {
-
+bool Product::restock(int quantity) {
+    return true;
 }

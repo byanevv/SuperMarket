@@ -1,0 +1,3 @@
+AllProductsGiftCard:0.15:8D1N5:All
+MultipleCategoryGiftCard:0.2:1R2B0:2:::
+SingleCategoryGiftCard:0.1:0A3T9:Fruits
